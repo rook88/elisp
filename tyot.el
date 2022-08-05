@@ -1,0 +1,291 @@
+
+; töihin liittyviä funktiot
+; C-t
+
+(defun tyot-avaa()
+  (interactive)
+  (open-module "tyot.el"))
+
+(defun tyot-versio ()
+  (interactive)
+  (wiki-avaa-sivu "versiot_2013_5"))
+
+(defun tyot-kantakorjaukset-pohja ()
+  (interactive)
+  (find-file "m:/data/kantakorjaukset/pohja.txt"))
+
+(defun tyot-toimeksiannot ()
+  (interactive)
+  (wiki-avaa-sivu  "toimeksiannot")
+;  (tyot-avaa-ohjelma "avaa_tiger"))
+)
+
+(defun korvaa-tag (tag arvo)
+  (goto-char (point-min))
+  (replace-string tag arvo))
+
+(defun tyot-kantakorjaukset ()
+  (interactive)
+  (find-file "m:/data/kantakorjaukset/pohja.txt")
+  (write-file "m:/data/kantakorjaukset/pohja-temp.txt")
+  (write-file (concat "m:/data/kantakorjaukset/"  (read-from-minibuffer "Tallenna kansioon m:/data/kantakorjaukset nimellä : ")) t)
+  (korvaa-tag "<osakas>" (read-from-minibuffer "Osakas: "))
+  (korvaa-tag "<toimeksianto>" (completing-read "Toimeksianto: " '("LTR11006S")))
+  (korvaa-tag "<yhteyshenkilo>" (read-from-minibuffer "Yhteyshenkilö: "))
+  (korvaa-tag "<ketju>" (read-from-minibuffer "Sähköpostiketju: "))
+  (korvaa-tag "<taulukko>" (read-from-minibuffer "Excel-taulukko: "))
+  (korvaa-tag "<salasana>" (arvo-salasana))
+  (korvaa-tag "<aikaleima>" (format-time-string "%d.%m.%Y KLO %H.%M" (current-time)))
+  (browse-url "http://mondo.esy/sites/Turvallisuus/Sovelluskehityksen%20tietoturva/Superkäyttäjätunnukset.doc")
+)
+
+(defun tyot-vltila ()
+  (interactive)
+  (find-file "m:/data/tyot/vltila.txt"))
+
+(defun tyot-omt-tilaus ()
+  (interactive)
+  (wiki-avaa-sivu "omt")
+  (browse-url "C:\\Program Files\\BMC Software\\ARSystem\\user\\aruser.exe"))
+
+(defun tyot-arviolaskenta ()
+  (interactive)
+  (browse-url "m:/data/kansiot/L840_tosiaikainen_arviolaskenta/")
+  (find-file "m:/data/kansiot/L840_tosiaikainen_arviolaskenta/muistiinpanot.txt"))
+
+(defun tyot-paasuunnittelu-relaatiot ()
+  (interactive)
+  (browse-url "m:/data/kansiot/ps/")
+  (find-file "m:/data/kansiot/ps/")
+)
+
+(defun tyot-k-e-p ()
+  (interactive)
+  (browse-url "http://ohjelmaopas.kokeile.yle.fi/1-1391710")
+; (browse-url "http://yle.fi/radiosuomi/ohjelmat/2012/01/koe-elainpuisto_3146742.html")
+  (wiki-avaa-sivu "biisit")
+;  (browse-url "http://areena.yle.fi/lista/116/kuunnelluimmat")
+)
+
+(defun tyot-paasuunnittelu-viikottaiset ()
+  (interactive)
+  (browse-url "C:/Documents and Settings/jokemjaa/Desktop/taustakuvat")
+  (tyot-k-e-p)
+  (browse-url "http://sovellukset.extra.esy/l-systeemi/tyonaikainen/asiakasdokumentaatio/Forms/tuoreimmat.aspx")
+  (browse-url "http://sovellukset.extra.esy/l-systeemi/tyonaikainen/asiakasdokumentaatio/SOVELLUKSEN_TIETOKANTAKIRJA.doc")
+;  (browse-url "http://sovellukset.extra.esy/l-systeemi/tyonaikainen/asiakasdokumentaatio/systeemiesittely.ppt")
+;  (browse-url "http://sovellukset.extra.esy/l-systeemi/tyopaperit_sisainen/LSYS_APU.xls")
+  (browse-url "http://sovellukset.extra.esy/l-systeemi/tyopaperit_sisainen/L-sys_mondo2teamer.doc")
+)
+
+;(setq kuvaus "test")
+(defun tyot-avaa-kuvaus (kuvaus)
+  (interactive "sAvaa kuvaus:")
+  (if (string-match "\\." kuvaus)
+      (setq kuvaus-koko kuvaus)
+    (setq kuvaus-koko (concat kuvaus ".doc")))
+  (browse-url (concat
+   "http://sovellukset.extra.esy/l-systeemi/tyonaikainen/asiakasdokumentaatio/"
+   kuvaus-koko)))
+
+(defun tyot-tyokokous ()
+  (interactive)
+  (wiki-avaa-sivu "työkokous")
+;  (find-file "C:/kansiot/tyokokous/muistiinpanot.txt")
+;  (browse-url "C:/kansiot/tyokokous/")
+)
+
+(defun tyot-tyokokous-tarjoilu ()
+  (interactive)
+  (shell-command "C:/kansiot/tyokokous/tarjoilu/tilaus_kopsu.bat")
+;(format-time-string %d.%m.%Y %T (current-time)) 03.02.2011 15:31:40
+  (browse-url 
+   (concat "C:/kansiot/tyokokous/tarjoilu/Tarjoilutilauslomake_laskenta_" 
+	   (format-time-string "%Y%m%d")
+	   ".doc"))
+  (leike-aseta-merkkijono "porkkalankatu3@theroncatering.fi")
+)
+
+
+(defun tyot-maksuluokka ()
+  (interactive)
+  (wiki-avaa-sivu "ML2014")
+  (browse-url "M:/data/kansiot/maksuluokka/")
+)
+
+(defun tyot-avaa-linkki ()
+  (interactive)
+  (browse-url
+   (kysy-relaatiosta "Linkki :" "m:/data/relaatiot/linkit.rel"))
+)
+
+(defun tyot-avaa-linkki-tiedosto ()
+  (interactive)
+  (find-file "m:/data/relaatiot/linkit.rel")
+)
+
+(defun tyot-avaa-ohjelma (&optional ohjelma)
+  (interactive)
+  (browse-url 
+   (concat "m:/data/batch/"
+   (if ohjelma
+       ohjelma
+     (kysy-relaatiosta "Ohjelma :" "m:/data/batch/ohjelmat.rel"))
+   ".bat"))
+)
+
+(defun tyot-avaa-batch ()
+  (interactive)
+  (find-file "m:/data/batch/")
+)
+
+(defun tyot-leikepoydalle-linkki ()
+  (interactive)
+  (kill-new
+   (kysy-relaatiosta "Linkki :" "m:/data/relaatiot/linkit.rel"))
+)
+
+(defun tyot-muistileike-kysy ()
+  (interactive)
+  (browse-url
+   (kill-new (kysy-relaatiosta "Muistileike :" "m:/data/relaatiot/muistileike.rel")))
+)
+
+(defun tyot-muistileike-lisaa ()
+  (interactive)
+  (find-file "m:/data/relaatiot/muistileike.rel")
+  (goto-char (point-max))
+  (insert (read-from-minibuffer "Lisätään muistileike avaimelle :"))
+  (insert ";")
+  (insert (leikepoyta-merkkijonoksi))
+  (insert "\n")
+  (save-buffer)
+  (kill-buffer (current-buffer))
+)
+
+(defun tyot-muistileike-avaa ()
+  (interactive)
+  (find-file "m:/data/relaatiot/muistileike.rel")
+)
+
+(defun tyot-avaa-linkkitiedosto ()
+  (interactive)
+  (find-file "m:/data/relaatiot/linkit.rel")
+  (goto-char (point-max))
+)
+
+(defun tyot-ennakkolaskenta ()
+  (interactive)
+;  (find-file "M:/data/kansiot/ennakkolaskenta/EL2012_muistiinpanot.txt")
+;  (browse-url "http://sovellukset.extra.esy/l-systeemi/TEPI/EL_kevaalla_2012_aikataulu.doc")
+  (wiki-avaa-sivu "EL2013")
+;  (browse-url "http://sovellukset.extra.esy/l-systeemi/tyopaperit_sisainen/EL2013_tyopaperi.doc")
+)
+
+(defun tyot-informatica ()
+  (interactive)
+  (wiki-avaa-sivu "Informatica_Varma")
+  (browse-url "https://portti.varma.fi/vpn/index.html")
+)
+
+(defun tyot-jira ()
+  (interactive)
+;  (wiki-avaa-sivu "JIRA")
+;  (wiki-avaa-sivu "JIRA_VARMPS")
+;  (browse-url "http://jira.mycapco.com/secure/Dashboard.jspa")
+   (browse-url (concat "https://jira.pcoe.etb.tieto.com/browse/" (buffer-name))))
+
+(defun tyot-omat-skriptit ()
+  (interactive)
+  (shell-command "m:/data/vb/testi.bat")
+; miten seuraava tehdään siistist?
+  (switch-to-buffer "vbs.out")
+  (kill-buffer "vbs.out")
+  (switch-to-buffer "*Shell Command Output*")
+  (rename-buffer "vbs.out"))
+;  (find-file "m:/data/VB/testi.vbs")
+
+(defun tyot-paivaraportti ()
+  (interactive)
+;  (browse-url "http://sovellukset.extra.esy/l-systeemi/TEPI/PL2012_KL2011_VL2012tammi_aikataulu.xls")
+  (wiki-avaa-sivu "paivaraportti"))
+
+(defun tyot-leimaukset ()
+  (interactive)
+  (browse-url "C:\\Documents and Settings\\jokemjaa\\My Documents\\2012_work_bookkeeping_ Tesy pohja.xls"))
+
+(defun tyot-tabata ()
+  (interactive)
+  (browse-url "m:/data/omat/tabata.bat"))
+
+(defun tyot-command-prompt ()
+  (interactive)
+  (browse-url "C:\\WINDOWS\\system32\\cmd.exe"))
+
+(defun tyot-ec ()
+  (interactive)
+  (message "Evidence Collector...")
+ (browse-url "C:\\Program Files\\Evidence Collector\\Engine\\EC.exe"))
+
+(defun tyot-radio ()
+  (interactive)
+  (message "Radio ...")
+ (browse-url "http://yle.fi/puhe/live/"))
+
+(defun tyot-avaa-aikataulut ()
+  (interactive)
+  (wiki-avaa-sivu "aikataulu_lahdot"))
+
+(defun tyot-vpn ()
+  (interactive)
+  (shel-command "\"C:\\Program Files (x86)\\Cisco Systems\\VPN Client\\vpngui.exe\""))
+
+(defun tyot-jira-avaa ()
+  (interactive)
+  (if (string-match "VARM\\(A\\|PS\\)-[0-9]+" (leikepoyta-merkkijonoksi))
+      (wiki-avaa-sivu (match-string 0 (leikepoyta-merkkijonoksi)))
+    (message "Jiran tunnus ei tunnistu")))
+
+(global-unset-key (kbd "C-t"))
+;(global-unset-key (kbd "C-t o"))
+(global-set-key (kbd "C-t C-t") 'tyot-toimeksiannot)
+(global-set-key (kbd "C-t a o") 'tyot-avaa-ohjelma)
+(global-set-key (kbd "C-t a a") 'tyot-avaa-aikataulut)
+(global-set-key (kbd "<f6>") 'tyot-avaa-ohjelma)
+(global-set-key (kbd "C-t l a") 'tyot-avaa-linkki)
+(global-set-key (kbd "S-<f6>") 'tyot-avaa-linkki)
+(global-set-key (kbd "S-C-<f6>") 'tyot-avaa-linkki-tiedosto)
+(global-set-key (kbd "C-t f o") 'tyot-avaa-kuvaus)
+(global-set-key (kbd "M-<f6>") 'tyot-avaa-kuvaus)
+(global-set-key (kbd "C-t a =") 'tyot-avaa-batch)
+(global-set-key (kbd "C-t c o") 'tyot-command-prompt)
+(global-set-key (kbd "C-t c =") 'tyot-muistileike-avaa)
+(global-set-key (kbd "C-t c -") 'tyot-muistileike-kysy)
+(global-set-key (kbd "C-t f l") 'tyot-leimaukset)
+(global-set-key (kbd "C-t c +") 'tyot-muistileike-lisaa)
+(global-set-key (kbd "C-t i i") 'tyot-informatica)
+(global-set-key (kbd "H-1") 'tyot-informatica)
+(global-set-key (kbd "C-t j") 'tyot-jira)
+(global-set-key (kbd "C-t C-j") 'tyot-jira-avaa)
+(global-set-key (kbd "C-t k +") 'tyot-kantakorjaukset)
+(global-set-key (kbd "C-t k =") 'tyot-kantakorjaukset-pohja)
+(global-set-key (kbd "C-t l =") 'tyot-avaa-linkkitiedosto)
+(global-set-key (kbd "C-t l c") 'tyot-leikepoydalle-linkki)
+(global-set-key (kbd "C-t m l") 'tyot-maksuluokka)
+(global-set-key (kbd "C-t o m t") 'tyot-omt-tilaus)
+;(global-set-key (kbd "C-t o s") 'tyot-omat-skriptit)
+;(global-set-key (kbd "C-t p r") 'tyot-paasuunnittelu-relaatiot)
+(global-set-key (kbd "C-t p r") 'tyot-paivaraportti)
+(global-set-key (kbd "C-t p s") 'tyot-paasuunnittelu-viikottaiset)
+(global-set-key (kbd "C-t t k") 'tyot-tyokokous)
+(global-set-key (kbd "C-t t t") 'tyot-tyokokous-tarjoilu)
+(global-set-key (kbd "C-t t b") 'tyot-tabata)
+(global-set-key (kbd "C-t v l") 'tyot-vltila)
+(global-set-key (kbd "C-t e l") 'tyot-ennakkolaskenta)
+(global-set-key (kbd "C-t e c") 'tyot-ec)
+(global-set-key (kbd "C-t v p n") 'tyot-vpn)
+(global-set-key (kbd "C-t 5") 'tyot-versio)
+(global-set-key (kbd "C-t =") 'tyot-avaa)
+
+;(global-unset-key ("M-r"))
+(global-set-key (kbd "M-r") 'tyot-radio)

@@ -1,0 +1,36 @@
+(defun tuo-eri-avaimet (taulu)
+  (defvar myhash (make-hash-table :test 'equal))
+  (dolist (alkio taulu)
+    (puthash alkio 1 myhash))
+  (defun pullkeys (kk vv)
+    (setq allkeys (cons kk allkeys)))
+  (setq allkeys '())
+  (maphash 'pullkeys myhash)
+  (clrhash myhash)
+  (nreverse allkeys))
+
+(defun taulu-puskuriin (taulu)
+  (switch-to-buffer "taulu")
+  (dolist (alkio taulu)
+    (insert alkio)
+    (insert "\n")))
+
+(defun regexp-osumat-taulukkoon (regexp)
+  (interactive "sRegexp:")
+  (save-excursion
+    (goto-char 1)
+    (setq paluu '())
+    (while (re-search-forward regexp 99999 t)
+      (setq paluu (cons (match-string 1) paluu))))
+  (nreverse paluu))
+
+(defun regexp-osumat-puskuriin (regexp)
+  (interactive "sRegexp:")
+  (taulu-puskuriin (regexp-osumat-taulukkoon regexp)))
+
+(defun regexp-eri-osumat-puskuriin (regexp)
+  (interactive "sRegexp:")
+  (taulu-puskuriin (tuo-eri-avaimet (regexp-osumat-taulukkoon regexp))))
+
+(global-set-key (kbd "<S-f7>") 'regexp-osumat-puskuriin)
+;(global-set-key (kbd "<f7>") 'regexp-eri-osumat-puskuriin)
